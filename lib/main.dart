@@ -9,6 +9,26 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(
           title: new Text('Auction'),
+          actions: <Widget>[
+            // ADD Icon Display
+            new IconButton(
+              icon: Icon(
+                Icons.add,
+                color: Colors.white
+              ),
+              // FUNCTION to MAKE A NEW BID
+              onPressed: (){},
+            ),
+            // SEARCH Icon Display
+            new IconButton(
+              icon: Icon(
+                Icons.search,
+                color: Colors.white
+              ),
+              // Function to Implement SEARCH
+              onPressed: (){},
+            )
+          ],
         ),
       )
     );
