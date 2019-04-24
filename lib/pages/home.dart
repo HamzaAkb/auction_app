@@ -25,7 +25,6 @@ class Home extends StatelessWidget {
               Icons.search,
               color: Colors.white,
             ),
-<<<<<<< HEAD
             onPressed: () {
               Navigator.push(
                 context,
@@ -33,9 +32,6 @@ class Home extends StatelessWidget {
                     builder: (context) => new ShowSearchCategory()),
               );
             },
-=======
-            onPressed: () {},
->>>>>>> d6dc8d2f20c3423cba6b22a03f7783019a62f1de
           ),
           new IconButton(
             icon: Icon(
@@ -45,14 +41,7 @@ class Home extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-<<<<<<< HEAD
-                MaterialPageRoute(
-                    builder: (context) => AddProduct(
-                          user: user,
-                        )),
-=======
                 MaterialPageRoute(builder: (context) => AddProduct(user: user,)),
->>>>>>> d6dc8d2f20c3423cba6b22a03f7783019a62f1de
               );
             },
           ),
@@ -82,12 +71,8 @@ class Home extends StatelessWidget {
             ListTile(
               title: Text('Home'),
               onTap: () {
-<<<<<<< HEAD
                 Route route = MaterialPageRoute(builder: (context) => Home(user: user,));
                 Navigator.pushReplacement(context, route);
-=======
-                // IMPLEMENTATION
->>>>>>> d6dc8d2f20c3423cba6b22a03f7783019a62f1de
               },
             ),
             ListTile(
@@ -106,7 +91,6 @@ class Home extends StatelessWidget {
             ),
             ListTile(
               title: Text('Categories'),
-<<<<<<< HEAD
               onTap: () {
                               Navigator.push(
                 context,
@@ -114,9 +98,6 @@ class Home extends StatelessWidget {
                     builder: (context) => new ShowSearchCategory()),
               );
               },
-=======
-              onTap: () {},
->>>>>>> d6dc8d2f20c3423cba6b22a03f7783019a62f1de
             ),
             Divider(
               color: Colors.black,
@@ -125,7 +106,6 @@ class Home extends StatelessWidget {
               title: Text('About Us'),
               onTap: () {},
             ),
-<<<<<<< HEAD
             Divider(
               color: Colors.black,
             ),
@@ -136,8 +116,6 @@ class Home extends StatelessWidget {
                 Navigator.pushReplacement(context, route);
               },
             ),
-=======
->>>>>>> d6dc8d2f20c3423cba6b22a03f7783019a62f1de
           ],
         ),
       ),
