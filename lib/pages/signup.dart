@@ -142,8 +142,8 @@ class _SignUpState extends State<SignUp> {
           .setData({ 'name': _fullName, 'id': user.uid, 'email': _email});
 
           //TODO: Navigate to home
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => new LoginPage()));
+                Route route = MaterialPageRoute(builder: (context) => LoginPage());
+                Navigator.pushReplacement(context, route);
         } catch (e) {
           print(e);
         }

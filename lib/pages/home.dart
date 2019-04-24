@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:auction_app/pages/add_product.dart';
+import 'package:auction_app/pages/show_search_category.dart';
+import 'package:auction_app/pages/login.dart';
 
 class Home extends StatelessWidget {
   const Home({Key key, this.user}) : super(key: key);
@@ -22,7 +24,13 @@ class Home extends StatelessWidget {
               Icons.search,
               color: Colors.white,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => new ShowSearchCategory()),
+              );
+            },
           ),
           new IconButton(
             icon: Icon(
@@ -32,7 +40,10 @@ class Home extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AddProduct(user: user,)),
+                MaterialPageRoute(
+                    builder: (context) => AddProduct(
+                          user: user,
+                        )),
               );
             },
           ),
@@ -62,7 +73,8 @@ class Home extends StatelessWidget {
             ListTile(
               title: Text('Home'),
               onTap: () {
-                // IMPLEMENTATION
+                Route route = MaterialPageRoute(builder: (context) => Home(user: user,));
+                Navigator.pushReplacement(context, route);
               },
             ),
             ListTile(
@@ -81,7 +93,13 @@ class Home extends StatelessWidget {
             ),
             ListTile(
               title: Text('Categories'),
-              onTap: () {},
+              onTap: () {
+                              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => new ShowSearchCategory()),
+              );
+              },
             ),
             Divider(
               color: Colors.black,
@@ -89,6 +107,16 @@ class Home extends StatelessWidget {
             ListTile(
               title: Text('About Us'),
               onTap: () {},
+            ),
+            Divider(
+              color: Colors.black,
+            ),
+            ListTile(
+              title: new Text('Log Out'),
+              onTap: () {
+                Route route = MaterialPageRoute(builder: (context) => LoginPage());
+                Navigator.pushReplacement(context, route);
+              },
             ),
           ],
         ),

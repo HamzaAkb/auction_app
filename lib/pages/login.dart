@@ -21,26 +21,48 @@ class _LoginPageState extends State<LoginPage> {
       ),
       body: Form(
         key: _formKey,
-        child: Column(
+        child: ListView(
           children: <Widget>[
-            TextFormField(
-              validator: (input) {
-                if (input.isEmpty) {
-                  return 'Please Enter an Email';
-                }
-              },
-              onSaved: (input) => _email = input,
-              decoration: InputDecoration(labelText: 'Email'),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
+              child: TextFormField(
+                validator: (input) {
+                  if (input.isEmpty) {
+                    return 'Please Enter an Email';
+                  }
+                },
+                onSaved: (input) => _email = input,
+                decoration: new InputDecoration(
+                    labelText: "Email",
+                    fillColor: Colors.white,
+                    border: new OutlineInputBorder(
+                      borderRadius: new BorderRadius.circular(25.0),
+                      borderSide: new BorderSide(),
+                    ),
+                    //fillColor: Colors.green
+                  ),
+              ),
             ),
-            TextFormField(
-              validator: (input) {
-                if (input.isEmpty) {
-                  return 'Please Enter a Password';
-                }
-              },
-              onSaved: (input) => _password = input,
-              decoration: InputDecoration(labelText: 'Password'),
-              obscureText: true,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
+              child: TextFormField(
+                validator: (input) {
+                  if (input.isEmpty) {
+                    return 'Please Enter a Password';
+                  }
+                },
+                onSaved: (input) => _password = input,
+                decoration: new InputDecoration(
+                    labelText: "Password",
+                    fillColor: Colors.white,
+                    border: new OutlineInputBorder(
+                      borderRadius: new BorderRadius.circular(25.0),
+                      borderSide: new BorderSide(),
+                    ),
+                    //fillColor: Colors.green
+                  ),
+                obscureText: true,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(18.0),
@@ -63,10 +85,12 @@ class _LoginPageState extends State<LoginPage> {
               color: Colors.grey,
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-              child: new Text(
-                'Other Options',
-                style: new TextStyle(fontSize: 20.0),
+              padding: const EdgeInsets.fromLTRB(10, 20, 0, 0),
+              child: Center(
+                              child: new Text(
+                  'Other Options',
+                  style: new TextStyle(fontSize: 20.0),
+                ),
               ),
             ),
             Padding(

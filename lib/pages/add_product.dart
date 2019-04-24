@@ -1,10 +1,13 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
+
+import 'package:auction_app/pages/home.dart';
 
 class AddProduct extends StatelessWidget {
   const AddProduct({Key key, this.user}) : super(key: key);
@@ -97,7 +100,7 @@ class AddProductForm extends StatefulWidget {
 }
 
 class _AddProductFormState extends State<AddProductForm> {
-  String _name, _description;
+  String _name, _description, _category;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final formats = {
@@ -119,6 +122,48 @@ class _AddProductFormState extends State<AddProductForm> {
     setState(() {
       _image = image;
     });
+  }
+
+  Future<FirebaseAuth> addProd() async {
+    final formState = _formKey.currentState;
+
+    formState.save();
+
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+
+    // Firestore.instance.collection('bid').document(user.uid).setData({
+    //   'description': _description,
+    //   'ending_date': _ending_date,
+    //   'image': _image,
+    //   'name': _name,
+    //   'starting_date': _starting_date,
+    //   'userID' : user.uid
+    // });
+
+    // var carData = {
+    //   'description': _description,
+    //   'ending_date': _ending_date,
+    //   'image': _image,
+    //   'name': _name,
+    //   'starting_date': _starting_date
+    // };
+
+    Firestore.instance.collection('bid').add({
+      'userID': user.uid,
+      'description': _description,
+      'name': _name,
+      'category' : _category,
+      'starting_date': _starting_date,
+      'ending_date': _ending_date,
+      //'image': _image
+    });
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => new Home(
+                  user: user,
+                )));
   }
 
   @override
@@ -150,13 +195,30 @@ class _AddProductFormState extends State<AddProductForm> {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
+              child: new DropdownButton<String>(
+                hint: Text('Choose Category'),
+                items: <String>['Sports', 'Electronis', 'Clothes']
+                    .map((String value) {
+                  return new DropdownMenuItem<String>(
+                    value: value,
+                    child: new Text(value),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  _category = value;
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
               child: DateTimePickerFormField(
                 inputType: inputType,
                 format: formats[inputType],
                 editable: editable,
-                onChanged: (dt) => setState(() => _starting_date = dt),
+                onChanged: (dt) => _starting_date = dt,
                 decoration: new InputDecoration(
-                  labelText: 'Date/Time', hasFloatingPlaceholder: false,
+                  labelText: 'Starting Date/Time',
+                  hasFloatingPlaceholder: false,
                   fillColor: Colors.white,
                   border: new OutlineInputBorder(
                     borderRadius: new BorderRadius.circular(25.0),
@@ -172,9 +234,9 @@ class _AddProductFormState extends State<AddProductForm> {
                 inputType: inputType,
                 format: formats[inputType],
                 editable: editable,
-                onChanged: (dt) => setState(() => _ending_date = dt),
+                onChanged: (dt) => _ending_date = dt,
                 decoration: new InputDecoration(
-                  labelText: 'Date/Time', hasFloatingPlaceholder: false,
+                  labelText: 'Ending Date/Time', hasFloatingPlaceholder: false,
                   fillColor: Colors.white,
                   border: new OutlineInputBorder(
                     borderRadius: new BorderRadius.circular(25.0),
@@ -192,7 +254,9 @@ class _AddProductFormState extends State<AddProductForm> {
                     return 'Please Enter Description of Product';
                   }
                 },
-                onSaved: (input) => _description = input,
+                onSaved: (input) {
+                  _description = input;
+                },
                 decoration: new InputDecoration(
                   labelText: "Description",
                   fillColor: Colors.white,
@@ -227,18 +291,35 @@ class _AddProductFormState extends State<AddProductForm> {
                 buttonColor: Colors.black,
                 height: 50,
                 child: RaisedButton(
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(40.0)),
-                    child: new Text(
-                      'Add Product',
-                      style: new TextStyle(color: Colors.white),
-                    ),
-                    onPressed: (){}),
+                  shape: new RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(40.0)),
+                  child: new Text(
+                    'Add Product',
+                    style: new TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () {
+                    addProd();
+                  },
+                ),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  void _showDialog(_description) {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Try Again"),
+          content: new Text("${_description}"),
+        );
+      },
     );
   }
 }
