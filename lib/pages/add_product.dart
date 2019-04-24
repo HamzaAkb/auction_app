@@ -1,13 +1,19 @@
+<<<<<<< HEAD
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+=======
+>>>>>>> d6dc8d2f20c3423cba6b22a03f7783019a62f1de
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 
+<<<<<<< HEAD
 import 'package:auction_app/pages/home.dart';
+=======
+>>>>>>> d6dc8d2f20c3423cba6b22a03f7783019a62f1de
 
 class AddProduct extends StatelessWidget {
   const AddProduct({Key key, this.user}) : super(key: key);
@@ -100,7 +106,12 @@ class AddProductForm extends StatefulWidget {
 }
 
 class _AddProductFormState extends State<AddProductForm> {
+<<<<<<< HEAD
   String _name, _description, _category;
+=======
+  String _name, _description;
+  Image _image;
+>>>>>>> d6dc8d2f20c3423cba6b22a03f7783019a62f1de
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final formats = {
@@ -114,6 +125,7 @@ class _AddProductFormState extends State<AddProductForm> {
   bool editable = true;
   DateTime _ending_date;
   DateTime _starting_date;
+<<<<<<< HEAD
   File _image;
 
   Future getImage() async {
@@ -165,6 +177,8 @@ class _AddProductFormState extends State<AddProductForm> {
                   user: user,
                 )));
   }
+=======
+>>>>>>> d6dc8d2f20c3423cba6b22a03f7783019a62f1de
 
   @override
   Widget build(BuildContext context) {
@@ -195,6 +209,7 @@ class _AddProductFormState extends State<AddProductForm> {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
+<<<<<<< HEAD
               child: new DropdownButton<String>(
                 hint: Text('Choose Category'),
                 items: <String>['Sports', 'Electronis', 'Clothes']
@@ -211,10 +226,13 @@ class _AddProductFormState extends State<AddProductForm> {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
+=======
+>>>>>>> d6dc8d2f20c3423cba6b22a03f7783019a62f1de
               child: DateTimePickerFormField(
                 inputType: inputType,
                 format: formats[inputType],
                 editable: editable,
+<<<<<<< HEAD
                 onChanged: (dt) => _starting_date = dt,
                 decoration: new InputDecoration(
                   labelText: 'Starting Date/Time',
@@ -226,6 +244,18 @@ class _AddProductFormState extends State<AddProductForm> {
                   ),
                   //fillColor: Colors.green
                 ),
+=======
+                onChanged: (dt) => setState(() => _starting_date = dt),
+                decoration: new InputDecoration(
+                  labelText: 'Date/Time', hasFloatingPlaceholder: false,
+                    fillColor: Colors.white,
+                    border: new OutlineInputBorder(
+                      borderRadius: new BorderRadius.circular(25.0),
+                      borderSide: new BorderSide(),
+                    ),
+                    //fillColor: Colors.green
+                  ),
+>>>>>>> d6dc8d2f20c3423cba6b22a03f7783019a62f1de
               ),
             ),
             Padding(
@@ -234,6 +264,7 @@ class _AddProductFormState extends State<AddProductForm> {
                 inputType: inputType,
                 format: formats[inputType],
                 editable: editable,
+<<<<<<< HEAD
                 onChanged: (dt) => _ending_date = dt,
                 decoration: new InputDecoration(
                   labelText: 'Ending Date/Time', hasFloatingPlaceholder: false,
@@ -244,6 +275,18 @@ class _AddProductFormState extends State<AddProductForm> {
                   ),
                   //fillColor: Colors.green
                 ),
+=======
+                onChanged: (dt) => setState(() => _ending_date = dt),
+                decoration: new InputDecoration(
+                  labelText: 'Date/Time', hasFloatingPlaceholder: false,
+                    fillColor: Colors.white,
+                    border: new OutlineInputBorder(
+                      borderRadius: new BorderRadius.circular(25.0),
+                      borderSide: new BorderSide(),
+                    ),
+                    //fillColor: Colors.green
+                  ),
+>>>>>>> d6dc8d2f20c3423cba6b22a03f7783019a62f1de
               ),
             ),
             Padding(
@@ -254,9 +297,13 @@ class _AddProductFormState extends State<AddProductForm> {
                     return 'Please Enter Description of Product';
                   }
                 },
+<<<<<<< HEAD
                 onSaved: (input) {
                   _description = input;
                 },
+=======
+                onSaved: (input) => _description = input,
+>>>>>>> d6dc8d2f20c3423cba6b22a03f7783019a62f1de
                 decoration: new InputDecoration(
                   labelText: "Description",
                   fillColor: Colors.white,
@@ -266,6 +313,7 @@ class _AddProductFormState extends State<AddProductForm> {
                   ),
                   //fillColor: Colors.green
                 ),
+<<<<<<< HEAD
               ),
             ),
             Padding(
@@ -303,11 +351,18 @@ class _AddProductFormState extends State<AddProductForm> {
                 ),
               ),
             ),
+=======
+                obscureText: true,
+              ),
+            ),
+            
+>>>>>>> d6dc8d2f20c3423cba6b22a03f7783019a62f1de
           ],
         ),
       ),
     );
   }
+<<<<<<< HEAD
 
   void _showDialog(_description) {
     // flutter defined function
@@ -322,4 +377,6 @@ class _AddProductFormState extends State<AddProductForm> {
       },
     );
   }
+=======
+>>>>>>> d6dc8d2f20c3423cba6b22a03f7783019a62f1de
 }

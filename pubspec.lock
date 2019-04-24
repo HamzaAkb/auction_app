@@ -57,6 +57,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.8"
+<<<<<<< HEAD
   dio:
     dependency: "direct main"
     description:
@@ -64,6 +65,8 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.2"
+=======
+>>>>>>> d6dc8d2f20c3423cba6b22a03f7783019a62f1de
   firebase_auth:
     dependency: "direct main"
     description:
