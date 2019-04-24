@@ -6,6 +6,7 @@ import 'package:auction_app/pages/add_product.dart';
 
 import 'package:auction_app/pages/show_search_category.dart';
 import 'package:auction_app/pages/login.dart';
+import 'package:auction_app/pages/show_products.dart';
 
 class Home extends StatelessWidget {
   const Home({Key key, this.user}) : super(key: key);
@@ -119,6 +120,13 @@ class Home extends StatelessWidget {
           ],
         ),
       ),
+      body: StreamBuilder(
+        stream: Firestore.instance.collection('bid').snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) return CircularProgressIndicator();
+          return FirestoreListView(documents: snapshot.data.documents);
+        },
+      ),
     );
   }
 }
@@ -135,6 +143,7 @@ class FirestoreListView extends StatelessWidget {
       itemExtent: 90,
       itemBuilder: (BuildContext context, int index) {
         String title = documents[index].data['name'].toString();
+        DateTime endingDate = documents[index].data['ending_date'].toDate();
 
         return ListTile(
           title: Container(
@@ -146,6 +155,7 @@ class FirestoreListView extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 Expanded(child: Text(title)),
+                Expanded(child: Text(endingDate.toString()),)
               ],
             ),
           ),
