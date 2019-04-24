@@ -1,9 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
-
 
 class AddProduct extends StatelessWidget {
   const AddProduct({Key key, this.user}) : super(key: key);
@@ -97,7 +98,6 @@ class AddProductForm extends StatefulWidget {
 
 class _AddProductFormState extends State<AddProductForm> {
   String _name, _description;
-  Image _image;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final formats = {
@@ -111,6 +111,15 @@ class _AddProductFormState extends State<AddProductForm> {
   bool editable = true;
   DateTime _ending_date;
   DateTime _starting_date;
+  File _image;
+
+  Future getImage() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      _image = image;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -148,13 +157,13 @@ class _AddProductFormState extends State<AddProductForm> {
                 onChanged: (dt) => setState(() => _starting_date = dt),
                 decoration: new InputDecoration(
                   labelText: 'Date/Time', hasFloatingPlaceholder: false,
-                    fillColor: Colors.white,
-                    border: new OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(25.0),
-                      borderSide: new BorderSide(),
-                    ),
-                    //fillColor: Colors.green
+                  fillColor: Colors.white,
+                  border: new OutlineInputBorder(
+                    borderRadius: new BorderRadius.circular(25.0),
+                    borderSide: new BorderSide(),
                   ),
+                  //fillColor: Colors.green
+                ),
               ),
             ),
             Padding(
@@ -166,13 +175,13 @@ class _AddProductFormState extends State<AddProductForm> {
                 onChanged: (dt) => setState(() => _ending_date = dt),
                 decoration: new InputDecoration(
                   labelText: 'Date/Time', hasFloatingPlaceholder: false,
-                    fillColor: Colors.white,
-                    border: new OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(25.0),
-                      borderSide: new BorderSide(),
-                    ),
-                    //fillColor: Colors.green
+                  fillColor: Colors.white,
+                  border: new OutlineInputBorder(
+                    borderRadius: new BorderRadius.circular(25.0),
+                    borderSide: new BorderSide(),
                   ),
+                  //fillColor: Colors.green
+                ),
               ),
             ),
             Padding(
@@ -193,10 +202,40 @@ class _AddProductFormState extends State<AddProductForm> {
                   ),
                   //fillColor: Colors.green
                 ),
-                obscureText: true,
               ),
             ),
-            
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
+              child: Center(
+                child: _image == null
+                    ? Text('No image selected.')
+                    : Image.file(_image),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
+              child: new FloatingActionButton(
+                onPressed: getImage,
+                tooltip: 'Pick Image',
+                child: Icon(Icons.add_a_photo),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: new ButtonTheme(
+                minWidth: double.infinity,
+                buttonColor: Colors.black,
+                height: 50,
+                child: RaisedButton(
+                    shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(40.0)),
+                    child: new Text(
+                      'Add Product',
+                      style: new TextStyle(color: Colors.white),
+                    ),
+                    onPressed: (){}),
+              ),
+            ),
           ],
         ),
       ),
