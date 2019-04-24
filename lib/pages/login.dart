@@ -5,7 +5,6 @@ import 'package:auction_app/pages/home.dart';
 import 'package:auction_app/pages/signup.dart';
 
 class LoginPage extends StatefulWidget {
-
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -126,8 +125,8 @@ class _LoginPageState extends State<LoginPage> {
         FirebaseUser user = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: _email, password: _password);
         //TODO: Navigate to home
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => new Home(user: user)));
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => new Home(user: user,)));
       } catch (e) {
         print(e);
       }
