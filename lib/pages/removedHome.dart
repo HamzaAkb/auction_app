@@ -2,8 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:auction_app/pages/add_product.dart';
-
 class Home extends StatelessWidget {
   const Home({Key key, this.user}) : super(key: key);
   final FirebaseUser user;
@@ -12,31 +10,7 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: new Center(
-          child: new Text('Stronzo'),
-        ),
-        actions: <Widget>[
-          new IconButton(
-            icon: Icon(
-              Icons.search,
-              color: Colors.white,
-            ),
-            onPressed: () {},
-          ),
-          new IconButton(
-            icon: Icon(
-              Icons.add,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AddProduct(user: user,)),
-              );
-            },
-          ),
-        ],
+        title: Text('Home ${user.email}'),
       ),
       drawer: Drawer(
         // Add a ListView to the drawer. This ensures the user can scroll
@@ -56,7 +30,7 @@ class Home extends StatelessWidget {
                 ),
               ),
               decoration: new BoxDecoration(
-                color: Colors.black,
+                color: Colors.redAccent,
               ),
             ),
             ListTile(
@@ -92,6 +66,13 @@ class Home extends StatelessWidget {
             ),
           ],
         ),
+      ),
+      body: StreamBuilder(
+        stream: Firestore.instance.collection('user').snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) return CircularProgressIndicator();
+          return FirestoreListView(documents: snapshot.data.documents);
+        },
       ),
     );
   }
