@@ -1,15 +1,13 @@
-
-
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
-
 import 'package:auction_app/pages/home.dart';
+import 'package:auction_app/pages/drawer.dart';
 
 class AddProduct extends StatelessWidget {
   const AddProduct({Key key, this.user}) : super(key: key);
@@ -34,59 +32,7 @@ class AddProduct extends StatelessWidget {
         ],
       ),
       drawer: Drawer(
-        // Add a ListView to the drawer. This ensures the user can scroll
-        // through the options in the Drawer if there isn't enough vertical
-        // space to fit everything.
-        child: ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            new UserAccountsDrawerHeader(
-              accountName: Text('Hamza Akbar'),
-              accountEmail: Text('${user.email}'),
-              currentAccountPicture: GestureDetector(
-                child: new CircleAvatar(
-                  backgroundColor: Colors.grey,
-                  child: Icon(Icons.person, color: Colors.white),
-                ),
-              ),
-              decoration: new BoxDecoration(
-                color: Colors.black,
-              ),
-            ),
-            ListTile(
-              title: Text('Home'),
-              onTap: () {
-                // IMPLEMENTATION
-              },
-            ),
-            ListTile(
-              title: Text('Notifications'),
-              onTap: () {
-                // IMPLEMENTATION.
-              },
-            ),
-            ListTile(
-              title: Text('My Bids'),
-              onTap: () {},
-            ),
-            ListTile(
-              title: Text('My Products'),
-              onTap: () {},
-            ),
-            ListTile(
-              title: Text('Categories'),
-              onTap: () {},
-            ),
-            Divider(
-              color: Colors.black,
-            ),
-            ListTile(
-              title: Text('About Us'),
-              onTap: () {},
-            ),
-          ],
-        ),
+        child: new Drawerr(user: user),
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(0, 16.0, 0, 0),
@@ -117,13 +63,25 @@ class _AddProductFormState extends State<AddProductForm> {
   DateTime _ending_date;
   DateTime _starting_date;
   File _image;
+  String _filename;
 
   Future getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
     setState(() {
       _image = image;
+      _filename = image.path;
     });
+  }
+
+  Future<String> uploadImage() async {
+    StorageReference ref = FirebaseStorage.instance.ref().child(_filename);
+    StorageUploadTask uploadTask = ref.putFile(_image);
+
+    var downURL = await (await uploadTask.onComplete).ref.getDownloadURL();
+    var url = downURL.toString();
+
+    return "";
   }
 
   Future<FirebaseAuth> addProd() async {
@@ -142,22 +100,18 @@ class _AddProductFormState extends State<AddProductForm> {
     //   'userID' : user.uid
     // });
 
-    // var carData = {
-    //   'description': _description,
-    //   'ending_date': _ending_date,
-    //   'image': _image,
-    //   'name': _name,
-    //   'starting_date': _starting_date
-    // };
+    final ref = FirebaseStorage.instance.ref().child(_image.path);
+
+    String url = await ref.getDownloadURL();
 
     Firestore.instance.collection('bid').add({
       'userID': user.uid,
       'description': _description,
       'name': _name,
-      'category' : _category,
+      'category': _category,
       'starting_date': _starting_date,
       'ending_date': _ending_date,
-      //'image': _image
+      'image': url
     });
 
     Navigator.push(
@@ -176,16 +130,18 @@ class _AddProductFormState extends State<AddProductForm> {
         child: ListView(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
               child: TextFormField(
                 validator: (input) {
                   if (input.isEmpty) {
-                    return 'Please Enter Product Name';
+                    return 'Please Enter Name of Product';
                   }
                 },
-                onSaved: (input) => _name = input,
+                onSaved: (input) {
+                  _name = input;
+                },
                 decoration: new InputDecoration(
-                  labelText: "Product Name",
+                  labelText: "Name",
                   fillColor: Colors.white,
                   border: new OutlineInputBorder(
                     borderRadius: new BorderRadius.circular(25.0),
@@ -199,7 +155,7 @@ class _AddProductFormState extends State<AddProductForm> {
               padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
               child: new DropdownButton<String>(
                 hint: Text('Choose Category'),
-                items: <String>['Sports', 'Electronis', 'Clothes']
+                items: <String>['Sports', 'Electronics', 'Clothes']
                     .map((String value) {
                   return new DropdownMenuItem<String>(
                     value: value,
@@ -285,6 +241,10 @@ class _AddProductFormState extends State<AddProductForm> {
                 tooltip: 'Pick Image',
                 child: Icon(Icons.add_a_photo),
               ),
+            ),
+            RaisedButton(
+              child: new Text('UPLOAD'),
+              onPressed: uploadImage,
             ),
             Padding(
               padding: const EdgeInsets.all(18.0),

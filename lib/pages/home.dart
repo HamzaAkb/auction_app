@@ -1,12 +1,16 @@
+import 'dart:async';
+import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:auction_app/pages/add_product.dart';
-
 import 'package:auction_app/pages/show_search_category.dart';
 import 'package:auction_app/pages/login.dart';
 import 'package:auction_app/pages/show_products.dart';
+import 'package:auction_app/pages/my_products.dart';
+import 'package:auction_app/pages/drawer.dart';
+import 'package:date_format/date_format.dart';
+import 'package:auction_app/pages/product_details.dart';
 
 class Home extends StatelessWidget {
   const Home({Key key, this.user}) : super(key: key);
@@ -28,10 +32,10 @@ class Home extends StatelessWidget {
             ),
             onPressed: () {
               Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => new ShowSearchCategory()),
-              );
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => new ShowSearchCategory(user: user),
+                  ));
             },
           ),
           new IconButton(
@@ -42,83 +46,17 @@ class Home extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AddProduct(user: user,)),
+                MaterialPageRoute(
+                    builder: (context) => AddProduct(
+                          user: user,
+                        )),
               );
             },
           ),
         ],
       ),
       drawer: Drawer(
-        // Add a ListView to the drawer. This ensures the user can scroll
-        // through the options in the Drawer if there isn't enough vertical
-        // space to fit everything.
-        child: ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            new UserAccountsDrawerHeader(
-              accountName: Text('Hamza Akbar'),
-              accountEmail: Text('${user.email}'),
-              currentAccountPicture: GestureDetector(
-                child: new CircleAvatar(
-                  backgroundColor: Colors.grey,
-                  child: Icon(Icons.person, color: Colors.white),
-                ),
-              ),
-              decoration: new BoxDecoration(
-                color: Colors.black,
-              ),
-            ),
-            ListTile(
-              title: Text('Home'),
-              onTap: () {
-                Route route = MaterialPageRoute(builder: (context) => Home(user: user,));
-                Navigator.pushReplacement(context, route);
-              },
-            ),
-            ListTile(
-              title: Text('Notifications'),
-              onTap: () {
-                // IMPLEMENTATION.
-              },
-            ),
-            ListTile(
-              title: Text('My Bids'),
-              onTap: () {},
-            ),
-            ListTile(
-              title: Text('My Products'),
-              onTap: () {},
-            ),
-            ListTile(
-              title: Text('Categories'),
-              onTap: () {
-                              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => new ShowSearchCategory()),
-              );
-              },
-            ),
-            Divider(
-              color: Colors.black,
-            ),
-            ListTile(
-              title: Text('About Us'),
-              onTap: () {},
-            ),
-            Divider(
-              color: Colors.black,
-            ),
-            ListTile(
-              title: new Text('Log Out'),
-              onTap: () {
-                Route route = MaterialPageRoute(builder: (context) => LoginPage());
-                Navigator.pushReplacement(context, route);
-              },
-            ),
-          ],
-        ),
+        child: new Drawerr(user: user),
       ),
       body: StreamBuilder(
         stream: Firestore.instance.collection('bid').snapshots(),
@@ -138,25 +76,57 @@ class FirestoreListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return GridView.builder(
       itemCount: documents.length,
-      itemExtent: 90,
+      gridDelegate:
+          new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
       itemBuilder: (BuildContext context, int index) {
-        String title = documents[index].data['name'].toString();
+        String title = documents[index].data['name'];
+        String url = documents[index].data['image'].toString();
         DateTime endingDate = documents[index].data['ending_date'].toDate();
 
-        return ListTile(
-          title: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5.0),
-              border: Border.all(color: Colors.white),
-            ),
-            padding: EdgeInsets.all(5.0),
-            child: Row(
-              children: <Widget>[
-                Expanded(child: Text(title)),
-                Expanded(child: Text(endingDate.toString()),)
-              ],
+        // String date = formatDate(
+        //     DateTime(endingDate.month, endingDate.day, endingDate.hour,
+        //         endingDate.minute, endingDate.second),
+        //     [M, ':', dd, ' (', hh, ':', nn, ':', ss, ' )']);
+
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+          child: Card(
+            child: Hero(
+              tag: title,
+              child: Material(
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => new ProductDetails(
+                              title: title, endingDate: endingDate)),
+                    );
+                  },
+                  child: GridTile(
+                      footer: Container(
+                          color: Colors.white,
+                          child: new Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Text(title,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16.0)),
+                              ),
+                              new Text(
+                                "${endingDate}",
+                                style: TextStyle(color: Colors.red),
+                              )
+                            ],
+                          )),
+                      child: Image.network(url,
+                        fit: BoxFit.cover,
+                      )),
+                ),
+              ),
             ),
           ),
         );
